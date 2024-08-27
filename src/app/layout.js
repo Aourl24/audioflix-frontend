@@ -4,6 +4,7 @@ import "./css/bootstrap-5/css/bootstrap.css";
 import "./css/fontawesome/css/all.min.css";
 import "./globals.css";
 import {PlayerContextProvider,Player} from "./component.js";
+import Link from "next/link"
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,10 +16,24 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className="font-lato color-bg-p">
+      <body className="font-lato color-bg-p container-fluid p-0">
+      <header class="color-bg-t color-p sz-14 container-fluid">
+      <div class="row p-3">
+        <div class="col">
+          AudioFlix
+        </div>
+        <div class="col-2">
+          <Link href="/music" class="no-decoration color-black">Discover</Link>
+        </div>
+        <div class="col-2">
+          <Link href="/" class="color-black no-decoration">History</Link>
+        </div>
+      </div>
+      </header>
+
       <PlayerContextProvider>
       {children}
-      <div id="fixed-bottom" class="fixed-bottom" style={{bottom:'8px',overflow:'hidden'}} >
+      <div id="fixed-bottom" class="fixed-bottom" style={{bottom:'0px',overflow:'hidden'}} >
       <Player />
       </div>
       </PlayerContextProvider>
