@@ -13,10 +13,9 @@ export default function Main() {
  var [music , setMusic] = React.useState()
 React.useEffect(()=>{
   //let url = "http://localhost:8000/musicapi"
-  let url = "http://192.168.103.92:8000/musicapi"
+  let url = "http://192.168.96.92:8000/musicapi"
   var data = fetch(url).then((x)=>
     x.json()).then((t)=>{
-    console.log(t)
     setMusic(t)
   })
 },[])
