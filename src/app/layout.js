@@ -3,7 +3,7 @@ import "./css/acss/acss.css";
 import "./css/bootstrap-5/css/bootstrap.css";
 import "./css/fontawesome/css/all.min.css";
 import "./globals.css";
-import {PlayerContextProvider,Player} from "./component.js";
+import {PlayerContextProvider,Player,Menu} from "./component.js";
 import Link from "next/link"
 
 const inter = Inter({ subsets: ["latin"] });
@@ -16,17 +16,14 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className="font-lato color-bg-p container-fluid p-0">
-      <header class="color-bg-t color-p sz-14 container-fluid">
-      <div class="row p-3">
-        <div class="col">
+      <body className="font-poppins color-bg-p container-fluid p-0">
+      <header class="color-bg-t color-p sz-14 container-fluid sticky-top">
+      <div class="row p-3 sz-18">
+        <div class="col ">
           AudioFlix
         </div>
-        <div class="col-2">
-          <Link href="/music" class="no-decoration color-black">Discover</Link>
-        </div>
-        <div class="col-2">
-          <Link href="/" class="color-black no-decoration">History</Link>
+        <div class="col right">
+          <Menu />
         </div>
       </div>
       </header>
@@ -41,3 +38,5 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
+
+

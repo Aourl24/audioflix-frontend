@@ -16,17 +16,12 @@ export function PlayerContextProvider({ children }) {
   const [random , setRandom] = React.useState(false)
   const [repeat , setRepeat] = React.useState(false)
 
-  const readableAudioDuration = (x) => {
-    const minutes = Math.floor(x.duration / 60);
-    const seconds = Math.floor(x.duration % 60);
+  const readableTime = (x) => {
+    const minutes = Math.floor(x / 60);
+    const seconds = Math.floor(x % 60);
     return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
   };
 
-  const readableAudioCurrentTime = (x) => {
-    const minutes = Math.floor(x.currentTime / 60);
-    const seconds = Math.floor(x.currentTime % 60);
-    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-  };
 
   const letPlay = (trackSrc) => {
     if (currentAudio.current) {
@@ -34,8 +29,8 @@ export function PlayerContextProvider({ children }) {
     }
     currentAudio.current = new Audio(trackSrc.file);
     currentAudio.current.play();
-    currentAudio.current.addEventListener("loadedmetadata", () => setAudioDuration(readableAudioDuration(currentAudio.current)));
-    currentAudio.current.addEventListener("timeupdate", () => setCurrentTime(readableAudioCurrentTime(currentAudio.current)));
+    currentAudio.current.addEventListener("loadedmetadata", () => setAudioDuration(currentAudio.current.duration));
+    currentAudio.current.addEventListener("timeupdate", () => setCurrentTime(currentAudio.current.currentTime));
     setCurrentTrack(trackSrc);
     setIsPlaying(true);
   };
@@ -81,7 +76,7 @@ export function PlayerContextProvider({ children }) {
   },[repeat])
 
   return (
-    <PlayerContext.Provider value={{ currentTrack, setCurrentTrack, isPlaying, setIsPlaying, letPlay, audioDuration, setAudioDuration, currentTime, setCurrentTime, playingSign, setPlayingSign, letPause, currentAudio, resumePlay, playNextTrack, setNextTrack, previousTrack, setPreviousTrack, playPreviousTrack ,nextTrack,random,repeat,setRepeat,setRandom}}>
+    <PlayerContext.Provider value={{ currentTrack, setCurrentTrack, isPlaying, setIsPlaying, letPlay, audioDuration, setAudioDuration, currentTime, setCurrentTime, playingSign, setPlayingSign, letPause, currentAudio, resumePlay, playNextTrack, setNextTrack, previousTrack, setPreviousTrack, playPreviousTrack ,nextTrack,random,repeat,setRepeat,setRandom, readableTime}}>
       {children}
     </PlayerContext.Provider>
   );
@@ -91,13 +86,13 @@ function usePlayer() {
   return React.useContext(PlayerContext);
 }
 
-export function SearchBar() {
+export function SearchBar({className}) {
   const searchBar = React.useRef();
   const [result , setResult] = React.useState()
 
   let fetchData = ()=>{
-    //let url = "http://localhost:8000/searchapi/" + searchBar.current.value
-  let url = "http://192.168.96.92:8000/searchapi/" + searchBar.current.value
+    let url = "http://localhost:8000/searchapi/" + searchBar.current.value
+  //let url = "http://192.168.96.92:8000/searchapi/" + searchBar.current.value
   var data = fetch(url).then((x)=>
     x.json()).then((t)=>{
     setResult(t)
@@ -105,23 +100,20 @@ export function SearchBar() {
   }
 
   return (
-    <div class="container">
-      <div  className=''>
-        <br />
-        <input ref={searchBar} type='search' className="form-control sz-16 color-black color-p" placeholder="search music" onChange={()=>fetchData()} />
-        <br />
-      </div>
+    <>
+      
+        <input ref={searchBar} type='search' className={`no-decoration no-border rounded-2 sz-16 color-black color-p p-2 p-md-3 ${className}`} placeholder="search music" onChange={()=>fetchData()} /> 
       {result &&
       <div class="position-fixed color-bg-p container vh-100" style={{marginLeft:'-10px',overflow:'auto'}}>
       <div class="row">
-      <div class="col"> <i class="fas fa-times sz-15 text-danger" onClick={()=>setResult()}></i> </div>
+      <div class="col p-3"> <i class="fas fa-times sz-15 text-danger" onClick={()=>setResult()}></i> </div>
       </div>
         <MusicBox data={result} />
       </div>
       }
       
 
-    </div>
+    </>
   );
 }
 
@@ -155,33 +147,42 @@ function Control({ size, type }) {
   );
 }
 
-export function PlayerFullBox({ toggleFullScreen }) {
-  const { currentTrack, currentTime, audioDuration, playNextTrack, setCurrentTime, currentAudio, playPreviousTrack, isPlaying ,random ,repeat ,setRepeat,setRandom} = usePlayer();
-  const [audioPercent, setAudioPercent] = React.useState('0%');
-  const seekBar = React.useRef();
-  const [option ,setOption] = React.useState(false)
-
-  const toSeconds = (x) => {
-    const [minutes, seconds] = x.split(':').map(Number);
-    return minutes * 60 + seconds;
-  };
-
-  React.useEffect(() => {
-    const t = audioDuration ? toSeconds(audioDuration) : 0;
-    const c = currentTime ? toSeconds(currentTime) : 0;
-    const percent = (c / t) * 100;
-    setAudioPercent(`${percent}%`);
-    if (seekBar.current) seekBar.current.value = percent;
-  }, [currentTime]);
+function SeekBar(props){
+    const {currentAudio,currentTime,audioDuration} = usePlayer()
+    const seekBar = React.useRef();
+    const [seek, setSeek] = React.useState(false)
 
   const handleSeekBarInput = () => {
       const time = (seekBar.current.value / 100) * currentAudio.current.duration;
+      setSeek(true)
       currentAudio.current.currentTime = time;
+      
     };
 
   React.useEffect(() => {
-    seekBar.current.addEventListener("input", handleSeekBarInput);
-  }, []);
+    const percent = (currentTime / audioDuration) * 100;
+
+  if (!seek) {
+    seekBar.current.value = percent;}
+  setSeek(false)
+  }, [currentTime]);
+
+  return(
+          <>
+            <input onInput={()=>handleSeekBarInput()} className="color-s" type="range" ref={seekBar}></input>
+          </>
+    )
+}
+
+export function PlayerFullBox({ toggleFullScreen }) {
+  const { currentTrack, currentTime, audioDuration, playNextTrack, setCurrentTime, currentAudio, playPreviousTrack, isPlaying ,random ,repeat ,setRepeat,setRandom,readableTime} = usePlayer();
+  
+  const [option ,setOption] = React.useState(false)
+  
+
+  React.useEffect(()=>{
+
+  },[currentTrack])
 
   return (
     <div className="container-fluid color-bg-s position-fixed vh-100 p-3" style={{ top: '0', backgroundRepeat: 'no-repeat', left: '0', right: '0', zIndex: '1000000' }}>
@@ -197,10 +198,10 @@ export function PlayerFullBox({ toggleFullScreen }) {
       {option && <OptionBar items={currentTrack} />}
 
       <div className="row py-3">
-        <div className="col-md-6 col-sm-12 center">
+        <div className="col-md col-sm-12 center">
           <img src={currentTrack.cover_photo} className="img-flui rounded-3" style={{ width: '370px', height: '370px', objectFit: 'cover' }} />
         </div>
-        <div className="col-md-6 col-sm-12 sz-24 center color-white py-4 d-none d-md-block">
+        <div className="col-md-6 col-sm-12 sz-24 center color-white py-4 d-none">
         <div class="color-bg- p-3 py-4 rounded">No Lyrics Available yet</div></div>
       </div>
       <br />
@@ -210,12 +211,12 @@ export function PlayerFullBox({ toggleFullScreen }) {
       </div>
       <div className="row bold pt-2">
         <div className="col-12">
-          <input className="color-s" type="range" onInput={()=>handleSeekBarInput()} ref={seekBar}></input>
+          <SeekBar />
         </div>
       </div>
       <div className="row">
-        <div className="col sz-12 color-grey" style={{ textAlign: 'left' }}>{currentTime}</div>
-        <div className="col sz-12 color-grey" style={{ textAlign: 'right' }}>{audioDuration}</div>
+        <div className="col sz-12 color-grey" style={{ textAlign: 'left' }}>{readableTime(currentTime)}</div>
+        <div className="col sz-12 color-grey" style={{ textAlign: 'right' }}>{readableTime(audioDuration)}</div>
       </div>
       
       <div className="row color-white m-0 justify-content-center align-items-center mt-4">
@@ -246,14 +247,14 @@ export function PlayerFullBox({ toggleFullScreen }) {
 }
 
 export function PlayerSmallBox({ toggleFullScreen }) {
-  const { currentTrack, playNextTrack, playPreviousTrack } = usePlayer();
+  const { currentTrack, playNextTrack, playPreviousTrack, readableTime , audioDuration ,currentTime } = usePlayer();
 
   return (
-    <div id="fixed-bottom" className="container-fluid p-2" style={{overflow:"hidden"}}>
-      <div className="row align-items-center rounded bg-lig color-bg-s p-2 m-1 sh dow color-white">
-        <div className="col-10 col-md-5" onClick={toggleFullScreen} style={{ cursor: "pointer" }}>
-          <div className="row align-items-center">
-            <div className="col-2 col-md-1">
+    <div id="fixed-bottom" className="container-fluid p-2 py-md-3" style={{overflow:"hidden"}}>
+      <div className="row align-items-center rounded bg-lig color-bg-s p-2 m-1 sh dow color-white py-md-4">
+        <div className="col-10 col-md-3" onClick={toggleFullScreen} style={{ cursor: "pointer" }}>
+          <div className="row align-items-center gx-2">
+            <div className="col-2 col-md-2">
               <img src={currentTrack.cover_photo} className="img-flui" style={{ width: '50px', height: '50px', objectFit: 'cover' }}  />
             </div>
             <div className="col px-4 px-md-5">
@@ -262,13 +263,19 @@ export function PlayerSmallBox({ toggleFullScreen }) {
             </div>
           </div>
         </div>
-        <div className="col-1 col-md-4 display-sm-none d-none d-md-block"> <i> Lyrics not Available </i> </div>
+        <div className="col-1 col-md-6 d-none display-sm-none  d-md-block">
+        <div class="row">
+        <div class="col-1 right">{readableTime(currentTime)} </div>
+        <div class="col"><SeekBar /> </div>
+        <div class="col-1">{readableTime(audioDuration)}</div>
+         </div>
+        </div>         
         <div className="col-1 col-md-1 display-sm-none">
           <button className="btn no-decoration color-dark-white color-white" onClick={playPreviousTrack}>
             <i className="fas fa-step-backward color-t sz-20"></i>
           </button>
         </div>
-        <div className="col-1 col-md-1"><Control size="sz-36 color-t" /></div>
+        <div className="col-1 col-md-1"><Control size="sz-36 color-t" type="circle" /></div>
         <div className="col-1 col-md-1 display-sm-none">
           <button className="btn no-decoration color-dark-white sz-14 color-white" onClick={playNextTrack}>
             <i className="fas fa-step-forward color-t sz-20"></i>
@@ -415,7 +422,7 @@ export function MusicBox(props) {
     <div className="container-fluid py-3">
       <div className='row'>
         {props.data.map((x) => (
-          <div className="col-12 col-md-6 rounded p-2 my-2" key={x.id}>
+          <div className="col-12 col-md-12 rounded p-2 my-2" key={x.id}>
             <Music data={x}/>        
           </div>
         ))}
@@ -441,3 +448,20 @@ function Music(props){
     </div>
   )
 } 
+
+
+export function Menu(props){
+  let [menu , setMenu] = React.useState(false)
+  return(
+    <>
+    <i class="fas fa-bars sz-24" style={{cursor:"pointer"}} onClick={()=>setMenu((prev)=>!prev)} > </i>
+      {menu && <div class="left container-fluid position-fixed  h-100 color-bg-p color-white w-50">
+        <div class="row">
+          <div class="col-12 sz-18 color-white p-3 right">History</div>
+          <div class="col-12 sz-18 color-white p-3 right">Home</div>
+        </div>
+      </div>
+    }
+    </>
+    )
+}
