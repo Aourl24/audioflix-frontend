@@ -17,7 +17,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className="font-poppins color-bg-p container-fluid p-0">
-      <header class="color-bg-t color-p sz-14 container-fluid sticky-top">
+      <header class="color-bg-t color-p sz-14 container-fluid">
       <div class="row p-3 sz-18">
         <div class="col ">
           AudioFlix

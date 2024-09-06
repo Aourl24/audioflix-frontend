@@ -370,23 +370,24 @@ function OptionBar({ items }) {
   );
 }
 
-export function MusicBox(props) {
+export function MusicBox({data}) {
+
   const { currentTrack, setCurrentTrack, letPlay, setNextTrack, setPreviousTrack, nextTrack , currentAudio,playNextTrack,random,repeat} = usePlayer();
   const [shuffle,setShuffle] = React.useState()
 
   const nextSong = (x) => {
-    const index = props.data.findIndex((item) => item.id === currentTrack?.id);
+    const index = data.findIndex((item) => item.id === currentTrack?.id);
     let next;
     if(random){
-      next = props.data[Math.floor(Math.random()*props.data.length)]
+      next = data[Math.floor(Math.random()*props.data.length)]
     }
 
     else{
-    if (index + 1 === props.data.length) {
-      next = props.data[0];
+    if (index + 1 === data.length) {
+      next = data[0];
 
     } else {
-      next = props.data[index + 1];
+      next = data[index + 1];
     }
   }
 
@@ -398,13 +399,13 @@ export function MusicBox(props) {
   };
 
   const previousSong = (x)=>{
-    const index = props.data.findIndex((item) => item.id === currentTrack?.id);
+    const index = data.findIndex((item) => item.id === currentTrack?.id);
     let previous;
     if(index === 0){
-      previous = props.data[props.data.length -1]
+      previous = data[props.data.length -1]
     }
     else{
-      previous = props.data[index - 1] 
+      previous = data[index - 1] 
     }
     setPreviousTrack(previous)
   }
@@ -420,15 +421,30 @@ export function MusicBox(props) {
 
   return (
     <div className="container-fluid py-3">
+     {data && <MusicList data={data} /> }
+    </div>
+  );
+}
+
+function MusicList({data}){
+  
+  React.useEffect(()=>{
+    console.log(data)
+  },[])
+
+  return(
+    <>
+    {data &&
       <div className='row'>
-        {props.data.map((x) => (
+        {data.map((x) => (
           <div className="col-12 col-md-12 rounded p-2 my-2" key={x.id}>
             <Music data={x}/>        
           </div>
         ))}
       </div>
-    </div>
-  );
+    }
+    </>
+    )
 }
 
 
@@ -436,7 +452,7 @@ function Music(props){
   let {letPlay , currentTrack } = usePlayer()
   return(
     <div className="row align-items-center">
-      <div className="col-2 col-md-2 right">
+      <div className="col-2 col-md-1 gx-0 right">
         <img src={props.data.cover_photo} className="img-flui" style={{ width: '55px', height: '55px', objectFit: 'cover' }}  />
       </div>
       <div className="col no-decoration px-3" onClick={() => letPlay(props.data)} style={{ cursor: "pointer" }}>
@@ -463,5 +479,32 @@ export function Menu(props){
       </div>
     }
     </>
+    )
+}
+
+
+export function PlayingHistory(props){
+  const {currentTrack} = usePlayer()
+  const [tracks,setTracks] = React.useState()
+
+  React.useEffect(()=>{
+    let current = tracks ? [...tracks] : []
+    current.push(currentTrack)
+    setTracks(current)
+    console.log(tracks)
+  },[currentTrack])
+  
+  return(
+        <div class="container-fluid">
+        <div class="row my-2 border">
+          <div class="col sz-24 p-3 color-t">
+            Recent Plays
+          </div>
+        </div>
+          <div class="container-fluid">
+            {tracks && <MusicList data={tracks} /> }
+          </div>
+        </div>
+
     )
 }
