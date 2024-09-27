@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import Image from "next/image";
+import Link from "next/link"
 
 const PlayerContext = React.createContext();
 
@@ -336,7 +337,7 @@ function OptionBar({ items , mini, close}) {
             </div>
       
             <hr />
-      
+            {nextTrack &&<>
             <div class="row left">
             <div class="col sz-16 left bold py-2">
                 Next Track
@@ -347,7 +348,7 @@ function OptionBar({ items , mini, close}) {
             <div class="col-12">
               <Music data={nextTrack} />
             </div>
-            </div> <hr /> </>}
+            </div></>} <hr /> </>}
 
       
       <div class="row my-4  left">
@@ -453,7 +454,7 @@ export function MusicList({data}){
 
 
 function Music(props){
-  let {letPlay , currentTrack } = usePlayer()
+  let {letPlay , currentTrack , currentAudio} = usePlayer()
   let [showOption , setShowOption] = React.useState()
 
   return(
@@ -468,7 +469,7 @@ function Music(props){
         </div>
       </div>
       <div class="col-2 color-t">
-        {props.data.title === currentTrack?.title && <i class="spinner-grow"></i>}
+        {props.data.title === currentTrack?.title && currentAudio.current.play && <i class="spinner-grow"></i>}
       </div>
       <div class="col-1 right color-grey">
         <i class={`fas ${showOption ? "fas fa-times color-red" : "fa-ellipsis-v"} sz-18`} onClick={()=>setShowOption((prev)=>!prev)}></i>
@@ -507,7 +508,7 @@ export function PlayingHistory(props){
   return(
         <div class="container-fluid">
         <div class="row my-2">
-          <div class="col sz-24 p-3 mx-4 color-t">
+          <div class="col sz-24 p-3 color-t">
             Recent Plays
           </div>
         </div>
@@ -518,3 +519,15 @@ export function PlayingHistory(props){
 
     )
 }
+
+
+export function SearchBar({full}) {
+
+  const [showSearch, setShowSearch] = React.useState()
+if(full){
+  return(<Link href="/search"><input class="`no-decoration no-border rounded-2 sz-16 color-black color-p p-2 p-md-3" /> </Link>)
+}
+
+  return(
+<Link href="/search"><i class="fas fa-search" ></i> </Link>
+)}
