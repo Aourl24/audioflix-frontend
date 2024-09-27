@@ -31,6 +31,13 @@ input[type="range"]::-webkit-slider-runnable-track{
 	cursor:pointer;
 }
 
+::-webkit-scrollbar{
+	display:none;
+	background-color: silver;
+	height:3px;
+	width:3px;
+}
+
  --secondary-color:#9B51E0;
  --secondary-color:#8B0000;
  --secondary-color:#ff4c4c;

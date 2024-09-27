@@ -15,6 +15,7 @@ export function PlayerContextProvider({ children }) {
   const [previousTrack, setPreviousTrack] = React.useState();
   const [random , setRandom] = React.useState(false)
   const [repeat , setRepeat] = React.useState(false)
+  const [history , setHistory] = React.useState([])
 
   const readableTime = (x) => {
     const minutes = Math.floor(x / 60);
@@ -65,7 +66,7 @@ export function PlayerContextProvider({ children }) {
   };
 
   React.useEffect(() => {
-    
+      if(currentTrack) setHistory((prev)=>[...prev,currentTrack])    
   }, [currentTrack]);
 
   React.useEffect(()=>{
@@ -75,8 +76,13 @@ export function PlayerContextProvider({ children }) {
     })}
   },[repeat])
 
+  React.useEffect(()=>{
+    if(currentAudio.current){
+    currentAudio.current.addEventListener('ended', ()=> repeat ? letPlay(currentTrack) :letPlay(nextTrack))}
+  },[nextTrack])
+
   return (
-    <PlayerContext.Provider value={{ currentTrack, setCurrentTrack, isPlaying, setIsPlaying, letPlay, audioDuration, setAudioDuration, currentTime, setCurrentTime, playingSign, setPlayingSign, letPause, currentAudio, resumePlay, playNextTrack, setNextTrack, previousTrack, setPreviousTrack, playPreviousTrack ,nextTrack,random,repeat,setRepeat,setRandom, readableTime}}>
+    <PlayerContext.Provider value={{ currentTrack, setCurrentTrack, isPlaying, setIsPlaying, letPlay, audioDuration, setAudioDuration, currentTime, setCurrentTime, playingSign, setPlayingSign, letPause, currentAudio, resumePlay, playNextTrack, setNextTrack, previousTrack, setPreviousTrack, playPreviousTrack ,nextTrack,random,repeat,setRepeat,setRandom, readableTime, history, setHistory}}>
       {children}
     </PlayerContext.Provider>
   );
@@ -84,37 +90,6 @@ export function PlayerContextProvider({ children }) {
 
 function usePlayer() {
   return React.useContext(PlayerContext);
-}
-
-export function SearchBar({className}) {
-  const searchBar = React.useRef();
-  const [result , setResult] = React.useState()
-
-  let fetchData = ()=>{
-    let url = "http://localhost:8000/searchapi/" + searchBar.current.value
-  //let url = "http://192.168.96.92:8000/searchapi/" + searchBar.current.value
-  var data = fetch(url).then((x)=>
-    x.json()).then((t)=>{
-    setResult(t)
-  })
-  }
-
-  return (
-    <>
-      
-        <input ref={searchBar} type='search' className={`no-decoration no-border rounded-2 sz-16 color-black color-p p-2 p-md-3 ${className}`} placeholder="search music" onChange={()=>fetchData()} /> 
-      {result &&
-      <div class="position-fixed color-bg-p container vh-100" style={{marginLeft:'-10px',overflow:'auto'}}>
-      <div class="row">
-      <div class="col p-3"> <i class="fas fa-times sz-15 text-danger" onClick={()=>setResult()}></i> </div>
-      </div>
-        <MusicBox data={result} />
-      </div>
-      }
-      
-
-    </>
-  );
 }
 
 
@@ -156,6 +131,7 @@ function SeekBar(props){
       const time = (seekBar.current.value / 100) * currentAudio.current.duration;
       setSeek(true)
       currentAudio.current.currentTime = time;
+
       
     };
 
@@ -185,7 +161,7 @@ export function PlayerFullBox({ toggleFullScreen }) {
   },[currentTrack])
 
   return (
-    <div className="container-fluid color-bg-s position-fixed vh-100 p-3" style={{ top: '0', backgroundRepeat: 'no-repeat', left: '0', right: '0', zIndex: '1000000' }}>
+    <div className="container-fluid color-bg-s position-fixed vh-100 p-3" style={{ top: '0', backgroundRepeat: 'no-repeat', left: '0', right: '0', zIndex: '1000000' ,overflow:"hidden",}}>
       <div className="row color-white py-3 py-md-4">
         <div className="col">
           <button className="btn btn-link color-white left" onClick={toggleFullScreen}><i className="fas fa-chevron-down sz-16 color-white"></i></button>
@@ -195,21 +171,26 @@ export function PlayerFullBox({ toggleFullScreen }) {
         </div>
       </div>
 
-      {option && <OptionBar items={currentTrack} />}
+      {option && <OptionBar items={currentTrack} close={()=>setOption((prev)=>!prev)}/>}
 
-      <div className="row py-3">
+      <div className="row py-3" style={{backgroundImage: `url(${currentTrack.cover_photo})`,backgroundSize:"100%",backgroundBlur:"2",filter:"blur('2')"}}>
         <div className="col-md col-sm-12 center">
-          <img src={currentTrack.cover_photo} className="img-flui rounded-3" style={{ width: '370px', height: '370px', objectFit: 'cover' }} />
+          <img src={currentTrack.cover_photo} className="img-flui rounded-3" style={{ width: '370px', height: '450px', objectFit: 'cover' }} />
         </div>
         <div className="col-md-6 col-sm-12 sz-24 center color-white py-4 d-none">
         <div class="color-bg- p-3 py-4 rounded">No Lyrics Available yet</div></div>
       </div>
       <br />
+
+<div class="row align-items-center">
+      <div class="col">
       <div className="row my-md-2 my-1 font-poppins">
         <div className="col-12 sz-18 color-white">{currentTrack.title}</div>
         <div className="col color-grey sz-12">{currentTrack.artist}</div>
       </div>
-      <div className="row bold pt-2">
+
+      
+      <div className="row bold pt-2 pt-md-0">
         <div className="col-12">
           <SeekBar />
         </div>
@@ -218,8 +199,11 @@ export function PlayerFullBox({ toggleFullScreen }) {
         <div className="col sz-12 color-grey" style={{ textAlign: 'left' }}>{readableTime(currentTime)}</div>
         <div className="col sz-12 color-grey" style={{ textAlign: 'right' }}>{readableTime(audioDuration)}</div>
       </div>
+      </div>
+
+      <div class="col-12 col-md">
       
-      <div className="row color-white m-0 justify-content-center align-items-center mt-4">
+      <div className="row color-white m-0 justify-content-center align-items-center mt-4 mt-md-0">
 
       <div className="col-2 col-md-2 center">
             <i onClick={()=>setRandom((prev)=>!prev)} style={{cursor:"pointer"}} className={`fas fa-random ${random ? 'color-t':'color-grey'} sz-30`}></i>
@@ -240,7 +224,8 @@ export function PlayerFullBox({ toggleFullScreen }) {
         <div className="col-2 col-md-2 center">
             <i style={{cursor:"pointer"}} onClick={()=>setRepeat((prev)=>!prev)}  className={`fas fa-redo ${repeat ? 'color-t':'color-grey'} sz-30`}></i>
         </div>
-
+        </div>
+        </div>
       </div>
     </div>
   );
@@ -250,7 +235,7 @@ export function PlayerSmallBox({ toggleFullScreen }) {
   const { currentTrack, playNextTrack, playPreviousTrack, readableTime , audioDuration ,currentTime } = usePlayer();
 
   return (
-    <div id="fixed-bottom" className="container-fluid p-2 py-md-3" style={{overflow:"hidden"}}>
+    <div id="" className="container-fluid p-2 py-md-3">
       <div className="row align-items-center rounded bg-lig color-bg-s p-2 m-1 sh dow color-white py-md-4">
         <div className="col-10 col-md-3" onClick={toggleFullScreen} style={{ cursor: "pointer" }}>
           <div className="row align-items-center gx-2">
@@ -327,43 +312,62 @@ export function SideBar({ items }) {
   );
 }
 
-function OptionBar({ items }) {
-  const {nextTrack,currentTrack,repeat} = usePlayer();
+function OptionBar({ items , mini, close}) {
+  const {nextTrack,currentTrack,repeat,setNextTrack} = usePlayer();
 
   return (
-    <div className='col-md-6 container position-absolute rounded color-bg-p  p-4 color-white' style={{bottom:'0',zIndex:"1000000000",marginLeft:'-10px'}}>
-      <div class="row left">
-        <div class="col sz-16 bold py-2">
-          Now Playing {repeat && <span class="sz-14 color-grey"> On repeat </span>}
-        </div>
+    <div className='col-md-6 container col-12 position-fixed rounded-4 color-bg-black  p-4 color-white shadow' style={{bottom:'0',zIndex:"1000000000",arginLeft:'-10px',left:0}}>
+    
+    <div  class="row right sz-24">
+      <div class="col"> <i onClick={()=>close()} class="fas fa-times text-danger pointer-cursor"></i>
+      </div>
+    </div>
+
+      {!mini && <> <div class="row left">
+              <div class="col sz-16 bold py-2">
+                Now Playing {repeat && <span class="sz-14 color-grey"> On repeat </span>}
+              </div>
+            </div>
+      
+            <div class="row py-2 left">
+              <div class="col-12">
+              <Music data={currentTrack} />
+              </div>
+            </div>
+      
+            <hr />
+      
+            <div class="row left">
+            <div class="col sz-16 left bold py-2">
+                Next Track
+              </div>
+            </div>
+      
+            <div class="row py-2 left">
+            <div class="col-12">
+              <Music data={nextTrack} />
+            </div>
+            </div> <hr /> </>}
+
+      
+      <div class="row my-4  left">
+      <div class="col color-t sz-18">
+        <i class="fas fa-music"></i> {items.title} - <span class="color-grey">{items.artist}</span>
+      </div>
       </div>
 
-      <div class="row py-2 left">
-        <div class="col-12">
-        <Music data={currentTrack} />
-        </div>
-      </div>
-
-      <hr />
-
-      <div class="row left">
-      <div class="col sz-16 left bold py-2">
-          Next Track
-        </div>
-      </div>
-
-      <div class="row py-2 left">
-      <div class="col-12">
-        <Music data={nextTrack} />
-      </div>
-      </div>
-      <hr />
-      <div class="row py-3 sz-14 left">
-        <div class="col-1"> <i class="fas fa-download"></i> </div><div class="col"> Download track </div>
+      <div class="row left sz-14">
+        <div class="col-1"> <i class="fas fa-download"></i> </div> 
+        <div class="col"> Download track </div>
       </div>
 
       <div class="row py-3 sz-14 left">
         <div class="col-1"> <i class="fas fa-share"></i> </div><div class="col"> Share Track </div>
+      </div>
+
+      <div class="row left sz-14">
+        <div class="col-1"> <i class="fas fa-download"></i> </div> 
+        <div class="col pointer-cursor" onClick={()=>setNextTrack(items)}> Play Next </div>
       </div>
 
     </div>
@@ -402,7 +406,7 @@ export function MusicBox({data}) {
     const index = data.findIndex((item) => item.id === currentTrack?.id);
     let previous;
     if(index === 0){
-      previous = data[props.data.length -1]
+      previous = data[data.length -1]
     }
     else{
       previous = data[index - 1] 
@@ -426,7 +430,7 @@ export function MusicBox({data}) {
   );
 }
 
-function MusicList({data}){
+export function MusicList({data}){
   
   React.useEffect(()=>{
     console.log(data)
@@ -450,6 +454,8 @@ function MusicList({data}){
 
 function Music(props){
   let {letPlay , currentTrack } = usePlayer()
+  let [showOption , setShowOption] = React.useState()
+
   return(
     <div className="row align-items-center">
       <div className="col-2 col-md-1 gx-0 right">
@@ -461,6 +467,13 @@ function Music(props){
           <div className="col-12 sz-10 color-grey sz-12" style={{ color: '#d7' }}>{props.data.artist}</div>
         </div>
       </div>
+      <div class="col-2 color-t">
+        {props.data.title === currentTrack?.title && <i class="spinner-grow"></i>}
+      </div>
+      <div class="col-1 right color-grey">
+        <i class={`fas ${showOption ? "fas fa-times color-red" : "fa-ellipsis-v"} sz-18`} onClick={()=>setShowOption((prev)=>!prev)}></i>
+      </div>
+      {showOption && <OptionBar mini={true} items={props.data} close={()=>setShowOption()} />}
     </div>
   )
 } 
@@ -484,25 +497,22 @@ export function Menu(props){
 
 
 export function PlayingHistory(props){
-  const {currentTrack} = usePlayer()
-  const [tracks,setTracks] = React.useState()
+  const {currentTrack,history} = usePlayer()
+  //const [tracks,setTracks] = React.useState([])
 
   React.useEffect(()=>{
-    let current = tracks ? [...tracks] : []
-    current.push(currentTrack)
-    setTracks(current)
-    console.log(tracks)
+    
   },[currentTrack])
   
   return(
         <div class="container-fluid">
-        <div class="row my-2 border">
-          <div class="col sz-24 p-3 color-t">
+        <div class="row my-2">
+          <div class="col sz-24 p-3 mx-4 color-t">
             Recent Plays
           </div>
         </div>
           <div class="container-fluid">
-            {tracks && <MusicList data={tracks} /> }
+            {history.length > 0 ? <MusicList data={history} /> :<div class="sz-24 color-white"> "No history available"</div> }
           </div>
         </div>
 

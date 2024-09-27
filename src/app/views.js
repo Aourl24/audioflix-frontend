@@ -15,22 +15,22 @@ export default function App(props){
 		</div>
 			<div class="row align-items-stretch align-items-md-center justify-content-center gx-md-4 gy-0 vh-80 vh-md-90 font-adventor" stye={{marginTop:'-40px'}}>
 
-				<div class="col-12 col-md sz-36 color-white bordr-2 border-start p-3">
+				<div class="col-12 col-md sz-36 color-white bordr-2 p-3">
 
 					<div class="row">
 
-					<div class="col-12">
+					<div class="col-12 bold">
 					Find Your Rhythm
 					</div>
 					<div class="col-12 color-t sz-20 pb-3"> Personalized Music Journey Just for you </div>
-					<div class="col-12 d-md-block d-none py-3">
+					<div class="col-12  d-none py-3">
 		<SearchBar />
 		</div>
 		
 		<div classs="col">
 		<div class="row align-items-center gx-1">
-		<div class="col">
-		<hr class="d-block d-md-none" />
+		<div class="col d-md-none">
+		<hr class="d-block " />
 		</div>
 
 		<div class="col">
