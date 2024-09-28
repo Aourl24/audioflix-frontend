@@ -1,7 +1,7 @@
 "use client"
 import React from "react"
 import { useRouter ,useSearchParams } from 'next/navigation'
-import {MusicList} from "../../component.js";
+import {MusicList, MainLoader} from "../../component.js";
 import {endpoint} from "../../endpoint.js";
 
 export default function Main(){
@@ -21,7 +21,7 @@ function PlaylistDetail(){
 
   return(
       <div class="container positio h-100 colr-bg-p shadow">
-          
+          {!playlist && <MainLoader /> }
          <div class="row rounded-4 my-3" style={{backgroundImage:`url(${playlist?.cover_photo})`,height:"10cm",backgroundRepeat:"no-repeat",objectFit:"cover",backgroundSize:"100%",backgroundPosition:"top"}}>              
               <div class="col col-md sz-36 color-white bordr-2 p-3">
 
@@ -29,7 +29,7 @@ function PlaylistDetail(){
 
           <div class="col-12">
           {playlist?.name}
-          <div class="col-12 color-t sz-20 pb-3"> {playlist?.music.slice(0,3).map((x)=> x.artist + " , ")} and others </div>
+          <div class="col-12 color-t sz-20 pb-3"> {playlist?.music.slice(0,3).map((x)=> x.artist + " , ")} </div>
           </div>
           
     </div>

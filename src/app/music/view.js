@@ -1,17 +1,16 @@
 "use client"
 import React from "react";
-import {SideBar,MusicBox,PlayingHistory,MusicList} from "../component.js";
+import {SideBar,MusicBox,PlayingHistory,MusicList,Playlist,MainLoader} from "../component.js";
 import avatar from './avatar.jpeg';
 import Link from "next/link";
 import {Suspense} from "react";
 import Image from "next/image";
 //import asake from "./asake.mp3"
 import {endpoint} from "../endpoint.js"
-const PageContext = React.createContext()
+import {useRouter} from "next/navigation"
 
 export default function Main() {
-  const [pageswitch , setPageSwitch] = React.useState("home")
-  const [data,setData] = React.useState()
+  const [refresh,setRefresh] = React.useState(1)
   var [music , setMusic] = React.useState()
   const [playlist ,setPlaylist] = React.useState()
 
@@ -23,40 +22,27 @@ export default function Main() {
     setMusic(t)
   })
   
-  fetch(`${endpoint}/playlistviewapi`).then((x)=>x.json()).then((x)=>setPlaylist(x))
-},[])
+},[refresh])
+
+  React.useEffect(()=>{
+      fetch(`${endpoint}/playlistviewapi`).then((x)=>x.json()).then((x)=>setPlaylist(x))
+  },[])
 
   return(
-    <PageContext.Provider value={{setPageSwitch,data,setData,pageswitch,music,playlist}}>
     
-    <Home />
-
-      </PageContext.Provider>
+    <Home setRefresh={setRefresh} music={music} playlist={playlist} />
     )
 }
 
-function PageSwitch({page}){
-  if(page === "home"){
-    return (<><Home /></>)
-  }
-  else if (page === "history"){
-    return(<><PlayingHistory /></>)
-  }
-  else if(page === "detail"){
-    return (<> <PlaylistDetail /> </> )
-  }
-  else if(page === "search"){
-    return(<> <SearchResult /> </> )
-  }
-}
 
-
-function Home(props) {
+function Home({playlist, music, setRefresh}) {
   
-// var [music , setMusic ] = React.useState([{title:'Yoga',album:'',artist:'Asake',size:'3.40mb',file:'asake.mp3',cover_photo:avatar,id:5},{title:'Another Music',album:'',artist:'Papy',size:'3.40mb',file:'music.mp3',cover_photo:avatar,id:6}])
-const {music ,playlist} = React.useContext(PageContext) 
+// var [music , setMusic ] = React.useState([{title:'Yoga',album:'',artist:'Asake',size:'3.40mb',file:'asake.mp3',cover_photo:avatar,id:5},{title:'Another Music',album:'',artist:'Papy',size:'3.40mb',file:'music.mp3',cover_photo:avatar,id:6}]) 
  const scroll = React.useRef()
  const [scrollValue, setScrollValue] = React.useState(100)
+ const images = ["guy.jpeg","lady.jpeg"]
+ const [chosenImage, setChosenImage] = React.useState(0)
+ const router = useRouter()
 
 const changeScroll = (verdict) =>{
   
@@ -66,47 +52,74 @@ const changeScroll = (verdict) =>{
   else setScrollValue((prev)=>prev - 100 )
 }
 
+React.useEffect(()=>{
+const timer = setTimeout(()=>setChosenImage((prev)=>prev+1 >= images.length ? 0 : prev+1),5000)
+return ()=> clearTimeout(timer)
+},[chosenImage])
+
 
   return (
             
             <div class="container-fluid">
-    
-            <div class="row rounded-4 my-md-3 align-items-center" style={{backgroundImage:"url('lady.jpg')",height:"8.5cm",backgroundRepeat:"no-repeat",objectFit:"cover",backgroundSize:"100%",backgroundPosition:"top"}}>              
+          
+          <div class="row ">
+            <div class="col">
+            <div class="row runded-4 my-md-1 align-items-center color-bg-p hero-poster" style={{backgroundImage:`url(${images[chosenImage]})`,heigh:"8cm",backgroundRepeat:"no-repeat",objectFit:"cover",backgroundSize:"100%",}}>              
               <div class="col col-md sz-36 color-white bordr-2 p-3">
 
           <div class="row">
 
-          <div class="col-12 font-montserrat-bold">
+          <div class="col-12 font-montserrat-bold sz-sm-30 center">
           Find Your Rhythm
-          <div class="col-12 color-t sz-20"> Personalized Music Journey Just for you </div>
+          <div class="col-12 color-t sz-18 display-sm-non py-2">
+          <input class="rounded-5 no-border p-3 sz-14 col-md-6 col-8" type="search" onClick={()=>router.push("/search")} placeholder="Search For music" />
+          <span class=" color-bg-p color-t rounded p-2 d-none w-100"> Personalized Music Journey Just for you </span></div>
           </div>
           
     </div>
 
+    </div>
+
             </div>
             </div>
+
+            <div class="col p-2 display-sm-none d-none">
+
+            <div class="row ronded-4 my-3 my-md-3 align-items-center color-bg-p hero-poster" style={{backgroundImage:`url(${images[chosenImage + 1]})`,heigh:"8cm",backgroundRepeat:"no-repeat",objectFit:"cover",backgroundSize:"100%",}}>              
+              <div class="col col-md sz-36 color-white bordr-2 p-3">
     
-            <div class="row my-md-4 my-3">
-              <div class="col sz-20 color-t">  Playlist Made for You  </div>
+    </div>
+
+            </div>
+</div>
+            </div>
+            <br />
+            <div class="row my-3">
+              <div class="col sz-20 font-montserrat-bold color-t">  Playlist for You  </div>
+              <div class="col right"> <Link href="/playlist" class="no-decoration color-white sz-12"> view all </Link> </div>
             </div>
 
               {playlist && <div ref={scroll} class="d-flex" style={{overflow:"auto"}}>
                             {playlist.map((x)=>(
-                              <div class="col-md-3 col-6 p-4"> <Playlist data={x} /> </div>  
+                              <div class="col-md-3 col-7 px-3 px-md-4"> <Playlist data={x} /> </div>  
                             ))}
                             </div>}
 
-                <div class="row my-3 sz-16 color-white d-md-block d-none">
-                  <div class="col"><i class="fas fa-chevron-left" onClick={()=>changeScroll()}></i></div>
+              {!playlist && <MainLoader /> }
+
+                <div class="row my-4 sz-16 color-white display-sm-none">
+                  <div class="col "><i class="fas fa-chevron-left" onClick={()=>changeScroll()}></i></div>
                   <div class="col right" ><i class="fas fa-chevron-right" onClick={()=>changeScroll(true)}></i></div>
                 </div>
 
-            
-            <div class="row my-3">
-              <div class="col sz-20 color-t"> Quick Music </div>
+            <br />
+            <div class="row">
+              <div class="col sz-20 color-t font-montserrat-bold"> Quick Music </div>
+              <div class="col right"> <span class="no-decoration color-white sz-12 pointer-cursor" onClick={()=>setRefresh((prev)=>prev+1)}> refresh </span> </div>
             </div>
 
               <div>{music && <MusicBox data={music} />  } </div>
+              {!music && <MainLoader /> }
             </div>
         
   );
@@ -114,25 +127,5 @@ const changeScroll = (verdict) =>{
 
 
 
-function Playlist({data}){
-  const {setPageSwitch,setData} = React.useContext(PageContext)
-
-  const showDetail = ()=>{
-  
-    setData(data)
-    setPageSwitch("detail")
-  }
-
-  return(
-        <>
-        <Link class="row color-white pointer-cursor no-decoration" href={{pathname:`playlist/${data.id}`,query:{id:data.id}}} onClick={()=>showDetail()}>
-            <div class="rounded color-bg-silve col p-0" style={{height:""}}>
-            <img class="img-flui cover rounded" style={{height:"5cm",width:"100%"}} src={data.cover_photo} /> <div class="sz-16 psition-absolute py-md p-3" style={{marginTop:"-40px"}}><span class=" color-white ">{data.name}</span></div>
-              <div class="py-3 color-silver sz-sm-12">{data.music.slice(0,3).map((x)=> x.artist + " , ")} and others </div>
-            </div>
-        </Link>
-        </>
-    )
-}
 
 

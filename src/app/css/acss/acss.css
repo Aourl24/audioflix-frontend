@@ -720,11 +720,11 @@ body{
 
 @media(max-width:600px) {
     .display-sm-none {
-        display: none;
+        display: none!important;
     }
 
     .display-sm-show {
-        display: block;
+        display: block!important;
     }
 
     .max-height-150 {

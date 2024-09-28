@@ -5,7 +5,7 @@ import {endpoint} from "../endpoint.js"
 
 export default function Main(){
 	  const searchBar = React.useRef();
-	  const [result , setResult] = React.useState([])
+	  const [result , setResult] = React.useState()
 
   let fetchData = ()=>{
     let url = `${endpoint}/searchapi/` + searchBar.current.value
@@ -27,7 +27,8 @@ export default function Main(){
         
 
         <div>
-           {result ? <MusicList data={result} /> :<div class="sz-24 color-white"> "No Result available"</div> }
+           {result && <><MusicList data={result} /></> }
+           {result?.length == 0 && <div class="sz-16 center text-danger">Music not found!!! </div>}
         </div>
 
       </div>

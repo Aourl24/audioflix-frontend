@@ -38,6 +38,19 @@ input[type="range"]::-webkit-slider-runnable-track{
 	width:3px;
 }
 
+.hero-poster{
+	height:8cm;
+	background-size: 100%;
+}
+
+@media(min-width:600px) {
+	.hero-poster{
+	height:8cm;
+	background-position:right;
+	background-size: 100%;
+}
+}
+
  --secondary-color:#9B51E0;
  --secondary-color:#8B0000;
  --secondary-color:#ff4c4c;

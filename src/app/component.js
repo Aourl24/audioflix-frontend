@@ -513,7 +513,7 @@ export function PlayingHistory(props){
           </div>
         </div>
           <div class="container-fluid">
-            {history.length > 0 ? <MusicList data={history} /> :<div class="sz-24 color-white"> "No history available"</div> }
+            {history.length > 0 ? <MusicList data={history} /> :<div class="sz-18 color-white"> "No history available"</div> }
           </div>
         </div>
 
@@ -531,3 +531,29 @@ if(full){
   return(
 <Link href="/search"><i class="fas fa-search" ></i> </Link>
 )}
+
+
+
+export function Playlist({data}){
+
+  return(
+        <>
+        <Link class="row color-white pointer-cursor no-decoration" href={{pathname:`playlist/${data.id}`,query:{id:data.id}}} onClick={()=>showDetail()}>
+            <div class="rounde col p-1" style={{height:""}}>
+            <img class="img-fluid cover rounded-2" style={{height:"6cm",width:"100%"}} src={data.cover_photo} /> 
+            <div class="sz-16 position-absolut p-2 px-1 px-md-2" style={{marginTop:"-40px"}}><span class=" color-white ">{data.name}</span></div>
+              <div class="py-2 py-md-3 color-silver sz-sm-12">{data.music.slice(0,3).map((x)=> x.artist + " , ")} and others </div>
+            </div>
+        </Link>
+        </>
+    )
+}
+
+export function MainLoader(props){
+  return(
+    <div class="d-flex align-items-center center p-4" style={{height:"5cm"}}>
+      <div class="col center"> <div class="spinner-border color-grey"></div> </div>
+    </div>
+
+    )
+}
