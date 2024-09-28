@@ -117,9 +117,9 @@ function Pause({ type, size }) {
 function Control({ size, type }) {
   const { isPlaying } = usePlayer();
   return (
-    <>
+    <span class="d-inline-block">
       {isPlaying ? <Pause size={size} type={type} /> : <Play size={size} type={type} />}
-    </>
+    </span>
   );
 }
 
@@ -162,7 +162,7 @@ export function PlayerFullBox({ toggleFullScreen }) {
   },[currentTrack])
 
   return (
-    <div className="container-fluid color-bg-s position-fixed vh-100 p-3" style={{ top: '0', backgroundRepeat: 'no-repeat', left: '0', right: '0', zIndex: '1000000' ,overflow:"hidden",}}>
+    <div className="container-fluid color-bg-s position-fixed vh-100 p-3 animate__animated animate__slideInUp" style={{ top: '0', backgroundRepeat: 'no-repeat', left: '0', right: '0', zIndex: '1000000' ,overflow:"hidden",}}>
       <div className="row color-white py-3 py-md-4">
         <div className="col">
           <button className="btn btn-link color-white left" onClick={toggleFullScreen}><i className="fas fa-chevron-down sz-16 color-white"></i></button>
@@ -236,8 +236,8 @@ export function PlayerSmallBox({ toggleFullScreen }) {
   const { currentTrack, playNextTrack, playPreviousTrack, readableTime , audioDuration ,currentTime } = usePlayer();
 
   return (
-    <div id="" className="container-fluid p-2 py-md-3">
-      <div className="row align-items-center rounded bg-lig color-bg-s p-2 m-1 sh dow color-white py-md-4">
+    <div id="" className="container-fluid p-2 py-md-3 animate__animated animate__slideInUp">
+      <div className="row align-items-center rounded bg-lig color-bg-s p-2 m-1 sh dow color-white py-3 py-md-4">
         <div className="col-10 col-md-3" onClick={toggleFullScreen} style={{ cursor: "pointer" }}>
           <div className="row align-items-center gx-2">
             <div className="col-2 col-md-2">
@@ -283,7 +283,7 @@ export function Player(props) {
   return (
     <>
       {currentTrack && (
-        <div>
+        <div class="">
           {fullscreen ? <PlayerFullBox toggleFullScreen={toggleFullScreen} /> : <PlayerSmallBox toggleFullScreen={toggleFullScreen} />}
         </div>
       )}
@@ -317,7 +317,7 @@ function OptionBar({ items , mini, close}) {
   const {nextTrack,currentTrack,repeat,setNextTrack} = usePlayer();
 
   return (
-    <div className='col-md-6 container col-12 position-fixed rounded-4 color-bg-black  p-4 color-white shadow' style={{bottom:'0',zIndex:"1000000000",arginLeft:'-10px',left:0}}>
+    <div className='col-md-6 container col-12 position-fixed rounded-4 color-bg-black  p-4 color-white shadow animate__animated animate__slideInUp' style={{bottom:'0',zIndex:"1000000000",arginLeft:'-10px',left:0}}>
     
     <div  class="row right sz-24">
       <div class="col"> <i onClick={()=>close()} class="fas fa-times text-danger pointer-cursor"></i>
@@ -368,7 +368,7 @@ function OptionBar({ items , mini, close}) {
 
       <div class="row left sz-14">
         <div class="col-1"> <i class="fas fa-download"></i> </div> 
-        <div class="col pointer-cursor" onClick={()=>setNextTrack(items)}> Play Next </div>
+        <div class="col pointer-cursor" onClick={()=>{setNextTrack(items);close()}}> Play Next </div>
       </div>
 
     </div>
@@ -538,11 +538,11 @@ export function Playlist({data}){
 
   return(
         <>
-        <Link class="row color-white pointer-cursor no-decoration" href={{pathname:`playlist/${data.id}`,query:{id:data.id}}} onClick={()=>showDetail()}>
+        <Link class="row color-white pointer-cursor no-decoration" href={{pathname:`playlist/${data.id}`,query:{id:data.id}}}>
             <div class="rounde col p-1" style={{height:""}}>
-            <img class="img-fluid cover rounded-2" style={{height:"6cm",width:"100%"}} src={data.cover_photo} /> 
-            <div class="sz-16 position-absolut p-2 px-1 px-md-2" style={{marginTop:"-40px"}}><span class=" color-white ">{data.name}</span></div>
-              <div class="py-2 py-md-3 color-silver sz-sm-12">{data.music.slice(0,3).map((x)=> x.artist + " , ")} and others </div>
+            <img class="img-fluid cover rounde-2" style={{height:"4.5cm",width:"100%"}} src={data.cover_photo} /> 
+            <div class="sz-16 position-absolut p-2 px-1 px-md-2 font-montserrat-bold" style={{marginTop:"-40px"}}><span class=" color-white ">{data.name}</span></div>
+              <div class="py-3 py-md-4 color-silver sz-sm-12">{data.music.slice(0,3).map((x)=> x.artist + " , ")} and others </div>
             </div>
         </Link>
         </>

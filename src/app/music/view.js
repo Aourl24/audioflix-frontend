@@ -64,7 +64,7 @@ return ()=> clearTimeout(timer)
           
           <div class="row ">
             <div class="col">
-            <div class="row runded-4 my-md-1 align-items-center color-bg-p hero-poster" style={{backgroundImage:`url(${images[chosenImage]})`,heigh:"8cm",backgroundRepeat:"no-repeat",objectFit:"cover",backgroundSize:"100%",}}>              
+            <div class="row rounded-4 my-md-1 align-items-center color-bg-p hero-poster" style={{backgroundImage:`url(${images[chosenImage]})`,heigh:"8cm",backgroundRepeat:"no-repeat",objectFit:"cover",backgroundSize:"100%",}}>              
               <div class="col col-md sz-36 color-white bordr-2 p-3">
 
           <div class="row">
@@ -101,7 +101,7 @@ return ()=> clearTimeout(timer)
 
               {playlist && <div ref={scroll} class="d-flex" style={{overflow:"auto"}}>
                             {playlist.map((x)=>(
-                              <div class="col-md-3 col-7 px-3 px-md-4"> <Playlist data={x} /> </div>  
+                              <div class="col-md-3 col-6 px-3 px-md-4"> <Playlist data={x} /> </div>  
                             ))}
                             </div>}
 
@@ -118,7 +118,7 @@ return ()=> clearTimeout(timer)
               <div class="col right"> <span class="no-decoration color-white sz-12 pointer-cursor" onClick={()=>setRefresh((prev)=>prev+1)}> refresh </span> </div>
             </div>
 
-              <div>{music && <MusicBox data={music} />  } </div>
+              <div class="">{music && <MusicBox data={music} />  } </div>
               {!music && <MainLoader /> }
             </div>
         

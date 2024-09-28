@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./css/acss/acss.css";
 import "./css/bootstrap-5/css/bootstrap.css";
 import "./css/fontawesome/css/all.min.css";
+import "./css/animate.min.css";
 import "./globals.css";
 import {PlayerContextProvider,Player,Menu,SearchBar} from "./component.js";
 import Link from "next/link"
@@ -29,14 +30,14 @@ export default function RootLayout({ children }) {
       <body className="font-montserrat color-bg-p">
       
       <PlayerContextProvider>
-      <header class=" color-p sz-14 container-fluid color-bg-black sticky-top d-md-none" style={{maginRight:'-2px'}}>
+      <header class=" color-p sz-14 container-fluid color-bg-black sticky-top d-lg-none" style={{maginRight:'-2px'}}>
       <div class="row p-2 sz-16 bold py-3">
         <div class="col font-slick">
            <span class="color-white"> Audi <i class="fas fa-play-circle color-white sz-20"></i> flix </span> 
         </div>
-        <div  class="col d-md-none right color-t">
+        <div  class="col right color-t">
           <Link class="cursor d-none color-t-hover sz-16 no-decoration color-t" style={{cursor:'pointer'}} href="/search"><i class="fas fa-search"></i>  </Link>
-          <i class={`fas ${showMenu ? "fa-times":"fa-bars"} sz-24`} onClick={()=>setShowMenu((prev)=>!prev)}></i>
+          <i class={`bold fas ${showMenu ? "fa-times":"fa-bars"} sz-24`} onClick={()=>setShowMenu((prev)=>!prev)}></i>
         </div>
       </div>
       </header>
@@ -47,10 +48,10 @@ export default function RootLayout({ children }) {
             <div class="row gx-md-5">
 
 
-              <div class={`col-1 sz-12 ${!showMenu && "d-none d-md-none"} d-lg-block p-0 m-0`} style={{backgrounColo:"#F5D0D0",height:"100vh"}}>
-                              <div class="position-fixed m-0 container col-md-1 color-bg-black" style={{backgroundColo:"#F5D0D0",height:"100vh",}} >
+              <div class={`col-md-2 col-lg-1 col-12 sz-12  ${!showMenu && "d-none d-md-none"} d-lg-block p-0 m-0`} style={{backgrounColo:"#F5D0D0",height:"100vh"}}>
+                              <div class="position-fixed m-0 container animate__animated animate__slideInLeft col-md-2 col-lg-1 color-bg-p" style={{backgroundColo:"#F5D0D0",height:"100vh",}} >
                                 
-                                <div class=" row p-3 sz-14 color-p sz-14 color-bg-black color-white d-none d-md-block center" >
+                                <div class=" row p-3 sz-14 color-p sz-14 color-bg-p color-white d-none d-md-block center" >
                                   <div class="col-12 p-2 px-4">
                                      Audi <i class="fas fa-play-circle color-white sz-16"></i> flix
                                   </div>

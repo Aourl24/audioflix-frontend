@@ -22,10 +22,10 @@ function PlaylistDetail(){
   return(
       <div class="container positio h-100 colr-bg-p shadow">
           {!playlist && <MainLoader /> }
-         <div class="row rounded-4 my-3" style={{backgroundImage:`url(${playlist?.cover_photo})`,height:"10cm",backgroundRepeat:"no-repeat",objectFit:"cover",backgroundSize:"100%",backgroundPosition:"top"}}>              
+         <div class="row rounde my-3" style={{backgroundImage:`url(${playlist?.cover_photo})`,height:"10cm",backgroundRepeat:"no-repeat",objectFit:"cover",backgroundSize:"100%",backgroundPosition:"top"}}>              
               <div class="col col-md sz-36 color-white bordr-2 p-3">
 
-          <div class="row align-items-center h-100">
+          <div class="row align-items-end h-100">
 
           <div class="col-12">
           {playlist?.name}
