@@ -2,26 +2,13 @@ import Main from "./view.js";
 import axiox from "axios";
 import {Suspense} from "react";
 
-const fetchData = async () => {
-  	try {
-    const response = await axios.get('http://127.0.0.1:8000/musicapi');
-    console.log(response.data)
-    
-  	} catch (error) {
-    console.log('error occured')
-  	}
-  	return response.data
-};
 
 export default function App(){
 
 	const Loading = ()=> {<p>Loading</p>}
-	const data = fetchData()
 	return(
 		<>
-		<Suspense fallback={<Loading />}>
-			<Main data={data} />
-		</Suspense>
+			<Main />
 		</>
 		)
 }

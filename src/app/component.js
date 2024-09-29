@@ -8,8 +8,8 @@ const PlayerContext = React.createContext();
 export function PlayerContextProvider({ children }) {
   const [currentTrack, setCurrentTrack] = React.useState();
   const [isPlaying, setIsPlaying] = React.useState(false);
-  const [audioDuration, setAudioDuration] = React.useState();
-  const [currentTime, setCurrentTime] = React.useState();
+  const [audioDuration, setAudioDuration] = React.useState(0);
+  const [currentTime, setCurrentTime] = React.useState(0);
   const [playingSign, setPlayingSign] = React.useState(false);
   const currentAudio = React.useRef();
   const [nextTrack, setNextTrack] = React.useState();
@@ -67,6 +67,8 @@ export function PlayerContextProvider({ children }) {
   };
 
   React.useEffect(() => {
+      setAudioDuration(0)
+      setCurrentTime(0)
       if(currentTrack) setHistory((prev)=>[...prev,currentTrack])    
   }, [currentTrack]);
 
@@ -454,7 +456,7 @@ export function MusicList({data}){
 
 
 function Music(props){
-  let {letPlay , currentTrack , currentAudio} = usePlayer()
+  let {letPlay , currentTrack , currentAudio,isPlaying, audioDuration} = usePlayer()
   let [showOption , setShowOption] = React.useState()
 
   return(
@@ -469,7 +471,7 @@ function Music(props){
         </div>
       </div>
       <div class="col-2 color-t">
-        {props.data.title === currentTrack?.title && currentAudio.current.play && <i class="spinner-grow"></i>}
+        {props.data.title === currentTrack?.title && audioDuration === 0 && <i class="spinner-border"></i>}
       </div>
       <div class="col-1 right color-grey">
         <i class={`fas ${showOption ? "fas fa-times color-red" : "fa-ellipsis-v"} sz-18`} onClick={()=>setShowOption((prev)=>!prev)}></i>
