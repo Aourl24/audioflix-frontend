@@ -1,5 +1,4 @@
 import Main from "./view.js";
-import axiox from "axios";
 import {Suspense} from "react";
 
 
