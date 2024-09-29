@@ -60,7 +60,7 @@ export default function RootLayout({ children }) {
               
                                 <div class="row">
                                   <div class="col-12 p-4"> 
-                                    <Link class="cursor color-t-hover sz-12 sz-sm-16 no-decoration color-white" style={{cursor:'pointer'}} href="/music"><i class="fas fa-home rounded p-2 color-white color-bg-t sz-12 mx-2"></i> Home</Link> 
+                                    <Link class="cursor color-t-hover sz-12 sz-sm-16 no-decoration color-white" style={{cursor:'pointer'}} href="/"><i class="fas fa-home rounded p-2 color-white color-bg-t sz-12 mx-2"></i> Home</Link> 
                                     </div>
                                   </div>
               
