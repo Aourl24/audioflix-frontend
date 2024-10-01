@@ -48,8 +48,8 @@ export default function RootLayout({ children }) {
             <div class="row gx-md-5">
 
 
-              <div class={`col-md-2 col-lg-1 col-12 sz-12  ${!showMenu && "d-none d-md-none"} d-lg-block p-0 m-0`} style={{backgrounColo:"#F5D0D0",height:"100vh"}}>
-                              <div class="position-fixed m-0 container animate__animated animate__slideInLeft col-md-2 col-lg-1 color-bg-p" style={{backgroundColo:"#F5D0D0",height:"100vh",}} >
+              <div class={`col-md-2 col-lg-2 col-12 sz-12  ${!showMenu && "d-none d-md-none"} d-lg-block p-0 m-0`} style={{backgrounColo:"#F5D0D0",height:"100vh"}}>
+                              <div class="position-fixed m-0 container animate__animated animate__slideInLeft col-md-2 col-lg-2 color-bg-p" style={{backgroundColo:"#F5D0D0",height:"100vh",}} >
                                 
                                 <div class=" row p-3 sz-14 color-p sz-14 color-bg-p color-white d-none d-md-block center" >
                                   <div class="col-12 p-2 px-4">

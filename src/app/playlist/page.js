@@ -4,11 +4,25 @@ import {Playlist,MainLoader} from "../component.js"
 import {endpoint} from "../endpoint.js"
 
 export default function App(){
-	const [playlist , setPlaylist] = React.useState()
+	const [playlist , setPlaylist] = React.useState([])
+	const [page , setPage] = React.useState()
+
 
 	React.useEffect(()=>{
-		fetch(`${endpoint}/playlistviewapi/all`).then((x)=>x.json()).then((x)=>setPlaylist(x))
-	},[])
+		if(page){
+		fetch(`${endpoint}/playlistviewapi/${page}`).then((x)=>x.json()).then((x)=>{setPlaylist((prev)=>[...prev,...x.data])
+		if(x.has_next) setPage((prev)=>prev+1)
+		console.log(x.data)
+	}
+			)
+		
+	}
+	else{
+		setPage(1)
+	}
+	
+	},[page])
+
 
 	return(
 			<div class="container">

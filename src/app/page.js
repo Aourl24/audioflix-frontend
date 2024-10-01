@@ -12,9 +12,12 @@ export default function Main() {
   const [refresh,setRefresh] = React.useState(1)
   var [music , setMusic] = React.useState()
   const [playlist ,setPlaylist] = React.useState()
+  //const [page , setPage] = React.useState(1)
 
   React.useEffect(()=>{
-  let url = `${endpoint}/musicapi`
+    let url;
+  if(refresh > 1 ) {url = `${endpoint}/musicapi/refresh`}
+    else { url = `${endpoint}/musicapi`}
   //let url = "http://192.168.96.92:8000/musicapi"
   var data = fetch(url).then((x)=>
     x.json()).then((t)=>{
@@ -23,9 +26,12 @@ export default function Main() {
   
 },[refresh])
 
+
   React.useEffect(()=>{
-      fetch(`${endpoint}/playlistviewapi`).then((x)=>x.json()).then((x)=>setPlaylist(x))
+    fetch(`${endpoint}/playlistviewapi/${1}`).then((x)=>x.json()).then((x)=>{setPlaylist(x.data)})
+    
   },[])
+
 
   return(
     
@@ -39,7 +45,7 @@ function Home({playlist, music, setRefresh}) {
 // var [music , setMusic ] = React.useState([{title:'Yoga',album:'',artist:'Asake',size:'3.40mb',file:'asake.mp3',cover_photo:avatar,id:5},{title:'Another Music',album:'',artist:'Papy',size:'3.40mb',file:'music.mp3',cover_photo:avatar,id:6}]) 
  const scroll = React.useRef()
  const [scrollValue, setScrollValue] = React.useState(100)
- const images = ["guy.jpeg","lady.jpeg"]
+ const images = ["guy.jpeg","headset.jpg"]
  const [chosenImage, setChosenImage] = React.useState(0)
  const router = useRouter()
 
@@ -63,7 +69,7 @@ return ()=> clearTimeout(timer)
           
           <div class="row ">
             <div class="col">
-            <div class="row rounded-4 my-md-1 align-items-center color-bg-p hero-poster" style={{backgroundImage:`url(${images[chosenImage]})`,heigh:"8cm",backgroundRepeat:"no-repeat",objectFit:"cover",backgroundSize:"100%",}}>              
+            <div class="row rounded-md-4 my-md-1 align-items-center color-bg-p hero-poster" style={{backgroundImage:`url(${images[chosenImage]})`,heigh:"8cm",backgroundRepeat:"no-repeat",objectFit:"cover",backgroundSize:"100%",}}>              
               <div class="col col-md sz-36 color-white bordr-2 p-3">
 
           <div class="row">
@@ -71,7 +77,7 @@ return ()=> clearTimeout(timer)
           <div class="col-12 font-montserrat-bold sz-sm-30 center">
           Find Your Rhythm
           <div class="col-12 color-t sz-18 display-sm-non py-2">
-          <input class="rounded-5 no-border p-3 sz-14 col-md-6 col-8" type="search" onClick={()=>router.push("/search")} placeholder="Search For music" />
+          <input class="rounded-2 no-border p-3 sz-14 col-md-6 col-8" type="search" onClick={()=>router.push("/search")} placeholder="Search For music" />
           <span class=" color-bg-p color-t rounded p-2 d-none w-100"> Personalized Music Journey Just for you </span></div>
           </div>
           
