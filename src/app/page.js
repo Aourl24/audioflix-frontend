@@ -45,7 +45,7 @@ function Home({playlist, music, setRefresh}) {
 // var [music , setMusic ] = React.useState([{title:'Yoga',album:'',artist:'Asake',size:'3.40mb',file:'asake.mp3',cover_photo:avatar,id:5},{title:'Another Music',album:'',artist:'Papy',size:'3.40mb',file:'music.mp3',cover_photo:avatar,id:6}]) 
  const scroll = React.useRef()
  const [scrollValue, setScrollValue] = React.useState(100)
- const images = ["guy.jpeg","headset.jpg"]
+ const images = ["guy.jpeg","headset.jpg","background.jpg","background2.jpg"]
  const [chosenImage, setChosenImage] = React.useState(0)
  const router = useRouter()
 
