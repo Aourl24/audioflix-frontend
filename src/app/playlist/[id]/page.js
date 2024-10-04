@@ -14,6 +14,7 @@ function PlaylistDetail(){
   const [playlist ,setPlaylist] = React.useState()
   const router = useSearchParams()
   const id = router.get("id")
+  const colors = ["255,112,37","255,112,255"]
 
   React.useEffect(()=>{
     fetch(`${endpoint}/playlist/${id}/api`).then((x)=>x.json()).then((x)=>setPlaylist(x))
@@ -28,8 +29,10 @@ function PlaylistDetail(){
           <div class="row align-items-end h-100">
 
           <div class="col-12">
-          {playlist?.name}
-          <div class="col-12 color-t sz-20 pb-3"> {playlist?.music.slice(0,3).map((x)=> x.artist + " , ")} </div>
+          <span style={{ background: `rgba(${colors[Math.floor(Math.random() * colors.length)]}, 0.5)` }} className="p-3 my-4 rounded">
+            {playlist?.name}
+        </span>
+          <div class="col-12 color-black sz-16 p-3"> {playlist?.music.slice(0,3).map((x)=> x.artist + `${playlist.music.length > 2 ? ' , ' : " || " }`)} {playlist.music.length > 3 && "and others"}</div>
           </div>
           
     </div>

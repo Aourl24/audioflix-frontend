@@ -16,6 +16,10 @@ export default function Main(){
   })
   }
 
+  React.useEffect(()=>{
+    searchBar.current.focus()
+  },[])
+
   return (
     <div class="container">
     <div class="row my-3">

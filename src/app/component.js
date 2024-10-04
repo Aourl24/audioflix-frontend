@@ -25,13 +25,14 @@ export function PlayerContextProvider({ children }) {
     return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
   };
 
-  const getOrCreateAudio = (src)=>{
-    if(!audioManager.current[src]){
-        audioManager.current[src] = new Audio(src)
-  }
-  return audioManager.current[src]
-  }
-
+const getOrCreateAudio = (src) => {
+    if (!audioManager.current[src]) {
+        audioManager.current[src] = new Audio(src);
+        audioManager.current[src].preload = 'auto'; // Set preload to auto
+        audioManager.current[src].load(); // Load the audio file
+    }
+    return audioManager.current[src];
+}
 
   const letPlay = (trackSrc) => {
 
@@ -298,7 +299,7 @@ export function PlayerSmallBox({ toggleFullScreen }) {
         <div class="row">
         <div class="col-1 right">{readableTime(currentTime)} </div>
         <div class="col"><SeekBar /> </div>
-        <div class="col-1">{readableTime(audioDuration.current)}</div>
+        <div class="col-1">{audioDuration.current ? readableTime(audioDuration.current) : "0.00"}</div>
          </div>
         </div>         
         <div className="col-1 col-md-1 display-sm-none">
@@ -505,7 +506,7 @@ function Music(props){
   return(
     <div className="row align-items-center">
       <div className="col-2 col-md-1 gx-0 right">
-        <img src={props.data.cover_photo} className="img-flui" style={{ width: '55px', height: '55px', objectFit: 'cover' }}  />
+        <img src={props.data.cover_photo} className="img-flui" style={{ width: '55px', height: '55px', objectFit: 'cover' }} loading="lazy" />
       </div>
       <div className="col no-decoration px-3" onClick={() => letPlay(props.data)} style={{ cursor: "pointer" }}>
         <div className="row">
@@ -587,7 +588,7 @@ export function Playlist({data}){
         <>
         <Link class="row color-white pointer-cursor no-decoration" href={{pathname:`playlist/${data.id}`,query:{id:data.id}}}>
             <div class="rounde col p-1" style={{height:""}}>
-            <img class="img-fluid cover rounded-3" style={{height:"4.5cm",width:"100%"}} src={data.cover_photo} /> 
+            <img class="img-fluid cover rounded-3" style={{height:"4.5cm",width:"100%"}} src={data.cover_photo} loading="lazy" /> 
             <div class="sz-16 sz-md-18 position-absolut p2 p1 x-md-2 font-montserrt-bold " style={{marginTop:"-35px"}}><span class=" color-black g-light p-2 rounde d-inline-bloc" style={{backdropFilter:"brightness(50%)",background:`rgba(${colors[Math.floor(data.id % 2)]},.8)`}}>{data.name}</span></div>
               <div class="py-3 py-md-4 color-silver sz-sm-12">{data.music.slice(0,3).map((x)=> x.artist + " , ")} and others </div>
             </div>
