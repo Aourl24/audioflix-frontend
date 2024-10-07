@@ -29,10 +29,10 @@ function PlaylistDetail(){
           <div class="row align-items-end h-100">
 
           <div class="col-12">
-          <span style={{ background: `rgba(${colors[Math.floor(Math.random() * colors.length)]}, 0.5)` }} className="p-3 my-4 rounded">
+          <span style={{ background: `rgba(${colors[Math.floor(Math.random() * colors.length)]}, 0.8)` }} className="p-3 my-4 rounded">
             {playlist?.name}
         </span>
-          <div class="col-12 color-black sz-16 p-3"> {playlist?.music.slice(0,3).map((x)=> x.artist + `${playlist.music.length > 2 ? ' , ' : " || " }`)} {playlist.music.length > 3 && "and others"}</div>
+          <div class="col-12 color-black sz-16 p-3"> {playlist?.music.slice(0,3).map((x)=> x.artist + `${playlist?.music.length > 2 ? ' , ' : " || " }`)} {playlist?.music.length > 3 && "and others"}</div>
           </div>
           
     </div>

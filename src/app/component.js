@@ -283,8 +283,8 @@ export function PlayerSmallBox({ toggleFullScreen }) {
 
   return (
     <div id="" className="container-fluid p-2 py-md-3 animate__animated animate__slideInUp">
-      <div className="row align-items-center rounded bg-lig color-bg-s p-2 m-1 sh dow color-white py-2 py-md-3">
-        <div className="col-10 col-md-3" onClick={toggleFullScreen} style={{ cursor: "pointer" }}>
+      <div className="row align-items-center rounded bg-lig p-2 m-1 sh dow color-white color-bg-s py-2 py-md-3">
+        <div className="col-10 col-md-3" onClick={toggleFullScreen} style={{ cursor: "pointer" ,}}>
           <div className="row align-items-center gx-2">
             <div className="col-2 col-md-2">
               <img src={currentTrack.cover_photo} className="img-flui" style={{ width: '55px', height: '55px', objectFit: 'cover' }}  />

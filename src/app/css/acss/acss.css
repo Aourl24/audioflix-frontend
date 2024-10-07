@@ -339,7 +339,7 @@ body{
 }
 
 .color-bg-brown {
-    color: brown;
+    background-color: brown;
 }
 
 .color-bg-silver {
@@ -347,7 +347,7 @@ body{
 }
 
 .color-bg-grey {
-    color: grey;
+    background-color: grey;
 }
 
 .color-p{

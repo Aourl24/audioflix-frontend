@@ -21,7 +21,7 @@ export default function Main(){
   },[])
 
   return (
-    <div class="container">
+    <div class="container animate__animated animate__slideInUp">
     <div class="row my-3">
     <div class="col">
         <input ref={searchBar} type='search' className={`no-decoration no-border rounded-2 sz-16 color-black color-p p-3 w-100  `} placeholder="search music" onChange={()=>fetchData()} />     

@@ -45,7 +45,7 @@ function Home({playlist, music, setRefresh}) {
 // var [music , setMusic ] = React.useState([{title:'Yoga',album:'',artist:'Asake',size:'3.40mb',file:'asake.mp3',cover_photo:avatar,id:5},{title:'Another Music',album:'',artist:'Papy',size:'3.40mb',file:'music.mp3',cover_photo:avatar,id:6}]) 
  const scroll = React.useRef()
  const [scrollValue, setScrollValue] = React.useState(100)
- const [images,setImages] = React.useState(["guy.jpeg","headset.jpg","background.jpg","background2.jpg"])
+ const [images,setImages] = React.useState([])
  const [chosenImage, setChosenImage] = React.useState(0)
  const router = useRouter()
 const search = React.useRef()
@@ -59,7 +59,8 @@ const changeScroll = (verdict) =>{
 }
 
 const redirect =()=>{
-    search.preventDefault();router.push("/search")
+    //search.current.preventDefault();
+    router.push("/search")
 }
 
 
@@ -71,9 +72,12 @@ return ()=> clearTimeout(timer)}
 
     const setBackgroundImage = () => {
         const width = window.innerWidth;
-        if (width >= 1024) {
+        if (width >= 700) {
             //element.style.backgroundImage = "url('large-background.jpg')";
-            setImages(["guy.jpeg"])
+            setImages(["guy2.jpg"])
+        }
+        else{
+          setImages(["guy.jpeg","headset.jpg","background.jpg","background2.jpg"])
         }     
       };
 
@@ -108,7 +112,7 @@ return ()=> clearTimeout(timer)}
           
           <div class="rounded w-100 sz-20 font-montserrat"> Personalized Music Journey Just for you </div></div>
           <div class="col-12 color-t sz-18 display-sm-non py-3 center">
-          <input class="rounded-4 no-border p-4 sz-14 col-md- col-8" ref={search} type="search" onClick={()=>redirect()} placeholder="Search For music" />
+          <input class="rounded-4 no-border p-3 p-md-4 sz-14 col-md- col-8" ref={search} type="search" onClick={()=>redirect()} placeholder="Search For music" />
           
           </div>
           

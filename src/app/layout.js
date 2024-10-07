@@ -31,12 +31,12 @@ export default function RootLayout({ children }) {
       <body className="font-montserrat color-bg-p">
       
       <PlayerContextProvider>
-      <header class=" color-p sz-14 container-fluid color-bg-black sticky-top d-lg-none py-4" style={{maginRight:'-2px'}}>
+      <header class=" color-p sz-14 container-fluid color-bg-black sticky-top d-lg-none py-md-4 py-2" style={{maginRight:'-2px'}}>
       <div class="row p-2 sz-16 bold py-3">
         <div class="col col-md-2 font-slick">
            <span class="color-white"> Audi <i class="fas fa-play-circle color-white sz-20"></i> flix </span> 
         </div>
-        <div  class="col right color-t center">
+        <div  class="col right color-t">
           <i class={`bold fas ${showMenu ? "fa-times":"fa-bars"} sz-24 d-md-none`} onClick={()=>setShowMenu((prev)=>!prev)}></i>
         </div>
       </div>
@@ -49,7 +49,7 @@ export default function RootLayout({ children }) {
 
 
               <div class={`col-md-2 col-lg-2 col-12 sz-12  ${!showMenu && "d-none d-md-none"} d-lg-block p-0 m-0`} style={{backgrounColo:"#F5D0D0",height:"100vh"}}>
-                              <div class="position-fixed m-0 container animate__animated animate__slideInLeft col-md-2 col-lg-2 color-bg-black" style={{backgroundColo:"#F5D0D0",height:"100vh",}} >
+                              <div class="position-fixed m-0 container animate__animated animate__slideInLeft col-md-2 col-lg-2" style={{backgroundColo:"#F5D0D0",height:"100vh",}} >
                                 
                                 <div class=" row p-3 sz-14 color-p sz-14 color-bg-black color-white d-none d-md-block center py-4" >
                                   <div class="col-12 p-2 px-4">
@@ -100,6 +100,7 @@ export default function RootLayout({ children }) {
       <br />
       <br />
       <br />
+      <br class="display-sm-none" />
       <br class="d-md-block d-none" />
       <br class="d-md-block d-none" />
       <div id="fixed-bottom" class="fixed-bottom" style={{bottom:'0px'}} >
